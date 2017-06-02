@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { Http, Response } from '@angular/http';
 import { NavController } from 'ionic-angular';
+
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'page-home',
@@ -7,8 +10,20 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  public pokes: any[];
 
+  constructor(public navCtrl: NavController, private http: Http) {
+     this.pokes;
+  }
+
+  // ngOnInit - inicio da tab
+  ngOnInit() {
+    this.http.get('http://pokeapi.co/api/v2/pokemon')
+    .map( (res: Response) => {
+       let body = res.json();
+       return body || {};
+    })
+    .subscribe(pokes => { this.pokes = pokes.results; })
   }
 
 }
